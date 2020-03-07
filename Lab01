@@ -1,0 +1,130 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package lab01;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+/**
+ *
+ * @author Student
+ */
+public class Lab01Zad {
+       
+   
+    public void zadjeden() {
+        
+         int timeout = 20;
+      for(int i=0; i<1024; i++) {  
+      try {
+	Socket socket = new Socket();
+	InetAddress inetadr = InetAddress.getByName("uph.pl");
+	InetSocketAddress conadr = new InetSocketAddress(inetadr, i);
+         socket.connect(conadr, timeout);
+        System.out.println("Port: "+i+" jest otwarty");
+		
+
+    } 
+    catch (Exception e) {
+    	System.out.print("*");
+     } 
+    }
+        
+        
+    }
+    
+    
+    
+    public void zaddwa() {
+        int timeout = 200;
+        String hostName = "vavatech.pl";
+      try (
+	Socket socket = new Socket(hostName, 80);
+	InputStream in = socket.getInputStream();
+	OutputStream out = socket.getOutputStream();
+         )
+      {
+    
+       System.out.println("Connected To Server ...");
+       
+        byte[] query = ("GET / HTTP/1.1\r\nHost:"+hostName+"\r\n\r\n").getBytes();
+        //byte[] query = hostName.getBytes();
+        out.write(query);
+        
+        int k = 0;
+        while((k=in.read())!=-1)
+		System.out.print((char)k);
+
+		
+
+    } 
+    catch (Exception e) {
+    	System.out.print("Blad");
+     } 
+    
+    }
+    
+    
+    public void zadcztery() {
+        
+        int timeout = 2000;
+        String hostName = "poczta.o2.pl";
+      try {
+        Socket socket = new Socket(hostName, 110);
+        InputStream in = socket.getInputStream();
+	OutputStream out = socket.getOutputStream();
+        
+         //Tutaj nawiąż połączenie z serwerem pocztowym
+    int k = 0;//uchwyt na kod bajtu;
+    while((k=in.read())!='\n')//czytanie do wystąpienia znaku końca wiersza
+	System.out.print((char)k);
+
+    out.write("USER testowanie.uph\r\n".getBytes ());
+    k = 0;
+        while((k=in.read())!='\n')
+		System.out.print((char)k);
+
+    out.write("PASS qazwsxedc0987654\r\n".getBytes());
+     k = 0;
+        while((k=in.read())!='\n')
+		System.out.print((char)k);
+
+    out.write("STAT\r\n".getBytes());
+      k = 0;
+        while((k=in.read())!='\n')
+		System.out.print((char)k);
+    
+    out.write("LIST\r\n".getBytes());
+      k = 0;
+        while((k=in.read())!='.')
+		System.out.print((char)k);
+
+    out.write("RETR 1\r\n".getBytes());
+    int l =0;  
+    k = 0;
+        while((k=in.read())!='.'||l!='\n')
+        {
+		System.out.print((char)k);
+                l=k;
+        }
+    out.write("QUIT\r\n".getBytes());
+      k = 0;
+        while((k=in.read())!='\n')
+		System.out.print((char)k);
+
+
+    }
+      catch (Exception e) {
+    	System.out.print("Blad");
+     } 
+    
+        
+        
+    }
+}
